@@ -4,15 +4,30 @@ module TableCounter
 
   # Count table in paragraph
   # @param paragraph [OoxmlParser::DocxParagraph] paragraph to count
-  # @return [Integer] count of elements
+  # @return [Integer] count of table
   def table_count_paragraph(paragraph)
     counter = 0
-    return 1 if paragraph.is_a?(OoxmlParser::Table)
     paragraph.nonempty_runs.each do |run|
       run.alternate_content.office2010_content
          .graphic.data.text_body
          .elements.each do |shape_element|
         counter += 1 if shape_element.is_a?(OoxmlParser::Table)
+      end
+    end
+    counter
+  end
+
+  # Count table in table
+  # @param table [OoxmlParser::Table] table to count
+  # @return [Integer] count of table
+  def table_count_table(table)
+    counter = 1
+    table.rows.each do |row|
+      row.cells.each do |cell|
+        cell.elements.each do |element|
+          counter += table_count_paragraph(element) if element.is_a?(OoxmlParser::DocxParagraph)
+          counter += table_count_table(element) if element.is_a?(OoxmlParser::Table)
+        end
       end
     end
     counter

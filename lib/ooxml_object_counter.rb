@@ -13,7 +13,8 @@ module OoxmlObjectCounter
     object_count = 0
     docx = OoxmlParser::Parser.parse(file)
     docx.elements.each do |element|
-      object_count += table_count_paragraph(element)
+      object_count += table_count_paragraph(element) if element.is_a?(OoxmlParser::DocxParagraph)
+      object_count += table_count_table(element) if element.is_a?(OoxmlParser::Table)
     end
     object_count
   end
