@@ -2,6 +2,18 @@
 module TableCounter
   private
 
+  # Count table in elements
+  # @param object with elements
+  # @return [Count] tables
+  def table_count_element(object)
+    counter = 0
+    object.elements.each do |element|
+      counter += table_count_paragraph(element) if element.is_a?(OoxmlParser::DocxParagraph)
+      counter += table_count_table(element) if element.is_a?(OoxmlParser::Table)
+    end
+    counter
+  end
+
   # Count table in paragraph
   # @param paragraph [OoxmlParser::DocxParagraph] paragraph to count
   # @return [Integer] count of table
@@ -24,10 +36,7 @@ module TableCounter
     counter = 1
     table.rows.each do |row|
       row.cells.each do |cell|
-        cell.elements.each do |element|
-          counter += table_count_paragraph(element) if element.is_a?(OoxmlParser::DocxParagraph)
-          counter += table_count_table(element) if element.is_a?(OoxmlParser::Table)
-        end
+        counter += table_count_element(cell)
       end
     end
     counter

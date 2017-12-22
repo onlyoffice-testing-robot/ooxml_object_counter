@@ -16,4 +16,8 @@ RSpec.describe 'OoxmlObjectCounter.count_table' do
   it 'table_with_shape.docx' do
     expect(OoxmlObjectCounter.table('spec/table/table_with_shape.docx')).to eq(1)
   end
+
+  it 'table_with_table_note.docx' do
+    expect(OoxmlObjectCounter.table('spec/table/table_with_table_note.docx')).to eq(3)
+  end
 end
