@@ -8,9 +8,9 @@ module TableCounter
   def table_count_paragraph(paragraph)
     counter = 0
     paragraph.nonempty_runs.each do |run|
-      run.alternate_content.office2010_content
-         .graphic.data.text_body
-         .elements.each do |shape_element|
+      text_body = run.alternate_content.office2010_content.graphic.data.text_body
+      next unless text_body
+      text_body.elements.each do |shape_element|
         counter += 1 if shape_element.is_a?(OoxmlParser::Table)
       end
     end
