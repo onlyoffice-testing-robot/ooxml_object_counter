@@ -22,11 +22,7 @@ module TableCounter
     paragraph.nonempty_runs.each do |run|
       next if run.is_a?(OoxmlParser::DocxFormula)
       next unless run.alternate_content
-      text_body = run.alternate_content.office2010_content.graphic.data.text_body
-      next unless text_body
-      text_body.elements.each do |shape_element|
-        counter += 1 if shape_element.is_a?(OoxmlParser::Table)
-      end
+      counter += table_count_in_graphic_data(run.alternate_content.office2010_content.graphic.data)
     end
     counter
   end
@@ -42,5 +38,27 @@ module TableCounter
       end
     end
     counter
+  end
+
+  def table_count_in_shape(shape)
+    counter = 0
+    return counter unless shape.text_body
+    shape.text_body.elements.each do |shape_element|
+      counter += 1 if shape_element.is_a?(OoxmlParser::Table)
+    end
+    counter
+  end
+
+  def table_count_in_graphic_data(data)
+    count = 0
+    shapes = if data.is_a?(OoxmlParser::ShapesGrouping)
+               data.elements
+             else
+               [data]
+             end
+    shapes.each do |shape|
+      count += table_count_in_shape(shape)
+    end
+    count
   end
 end
