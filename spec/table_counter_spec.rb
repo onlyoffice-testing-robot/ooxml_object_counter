@@ -28,4 +28,8 @@ RSpec.describe 'OoxmlObjectCounter.count_table' do
   it 'text_with_formulas.docx' do
     expect(OoxmlObjectCounter.table('spec/table/text_with_formulas.docx')).to eq(2)
   end
+
+  it 'table_in_file_with_shape_grouping.docx' do
+    expect(OoxmlObjectCounter.table('spec/table/table_in_file_with_shape_grouping.docx')).to eq(1)
+  end
 end
