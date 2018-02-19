@@ -21,8 +21,8 @@ module TableCounter
     counter = 0
     paragraph.nonempty_runs.each do |run|
       next if run.is_a?(OoxmlParser::DocxFormula)
-      next unless run.alternate_content
-      counter += table_count_in_graphic_data(run.alternate_content.office2010_content.graphic.data)
+      counter += table_count_in_graphic_data(run)
+      counter += table_count_in_shape(run.shape)
     end
     counter
   end
@@ -40,7 +40,7 @@ module TableCounter
     counter
   end
 
-  def table_count_in_shape(shape)
+  def table_count_in_docx_shape(shape)
     counter = 0
     return counter unless shape.text_body
     shape.text_body.elements.each do |shape_element|
@@ -49,7 +49,9 @@ module TableCounter
     counter
   end
 
-  def table_count_in_graphic_data(data)
+  def table_count_in_graphic_data(run)
+    return 0 unless run.alternate_content
+    data = run.alternate_content.office2010_content.graphic.data
     count = 0
     shapes = if data.is_a?(OoxmlParser::ShapesGrouping)
                data.elements
@@ -57,8 +59,20 @@ module TableCounter
                [data]
              end
     shapes.each do |shape|
-      count += table_count_in_shape(shape)
+      count += table_count_in_docx_shape(shape)
     end
     count
+  end
+
+  # @param shape [OoxmlParser::Shape] shape to count
+  # @return [Integer] number of tables
+  def table_count_in_shape(shape)
+    return 0 unless shape
+    counter = 0
+    return counter if shape.elements.empty?
+    shape.elements.each do |shape_element|
+      counter += 1 if shape_element.is_a?(OoxmlParser::Table)
+    end
+    counter
   end
 end
