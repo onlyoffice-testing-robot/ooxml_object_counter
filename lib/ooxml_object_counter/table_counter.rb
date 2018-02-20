@@ -42,7 +42,8 @@ module TableCounter
 
   def table_count_in_docx_shape(shape)
     counter = 0
-    return counter unless shape.text_body
+    counter += table_count_in_shape(shape)
+    return counter unless shape.respond_to?(:text_body) && shape.text_body
     shape.text_body.elements.each do |shape_element|
       counter += 1 if shape_element.is_a?(OoxmlParser::Table)
     end
@@ -69,6 +70,7 @@ module TableCounter
   def table_count_in_shape(shape)
     return 0 unless shape
     counter = 0
+    return counter unless shape.respond_to?(:elements)
     return counter if shape.elements.empty?
     shape.elements.each do |shape_element|
       counter += 1 if shape_element.is_a?(OoxmlParser::Table)
