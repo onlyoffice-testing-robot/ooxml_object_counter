@@ -33,7 +33,11 @@ RSpec.describe 'OoxmlObjectCounter.count_table' do
     expect(OoxmlObjectCounter.table('spec/table/table_in_file_with_shape_grouping.docx')).to eq(1)
   end
 
-  it 'table_in_docx_shape.docx' do
+  it 'table_in_shape.docx' do
     expect(OoxmlObjectCounter.table('spec/table/table_in_shape.docx')).to eq(8)
+  end
+
+  it 'table_in_shape_in_shape.docx' do
+    expect(OoxmlObjectCounter.table('spec/table/table_in_shape_in_shape.docx')).to eq(1)
   end
 end
