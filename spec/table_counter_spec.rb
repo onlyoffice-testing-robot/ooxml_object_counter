@@ -38,6 +38,10 @@ RSpec.describe 'OoxmlObjectCounter.count_table' do
   end
 
   it 'table_in_shape_in_shape.docx' do
-    expect(OoxmlObjectCounter.table('spec/table/table_in_shape_in_shape.docx')).to eq(1)
+    expect(OoxmlObjectCounter.table('spec/table/table_in_shape_in_shape.docx')).to eq(2)
+  end
+
+  it 'table_in_sdt.docx' do
+    expect(OoxmlObjectCounter.table('spec/table/table_in_sdt.docx')).to eq(1)
   end
 end

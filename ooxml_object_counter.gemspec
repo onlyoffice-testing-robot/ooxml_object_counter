@@ -11,5 +11,5 @@ Gem::Specification.new do |s|
   s.files = `git ls-files lib LICENSE.txt README.md`.split($RS)
   s.homepage = 'https://github.com/onlyoffice-testing-robot/ooxml_object_counter'
   s.license = 'AGPL-3.0'
-  s.add_runtime_dependency('ooxml_parser', '~> 0.3')
+  s.add_runtime_dependency('ooxml_parser', '~> 0.4')
 end
