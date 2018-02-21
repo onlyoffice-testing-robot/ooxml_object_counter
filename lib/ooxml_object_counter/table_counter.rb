@@ -8,6 +8,7 @@ module TableCounter
   def table_count_element(object)
     counter = 0
     object.elements.each do |element|
+      counter += table_count_in_element_list(element.sdt_content) if element.is_a?(OoxmlParser::StructuredDocumentTag)
       counter += table_count_paragraph(element) if element.is_a?(OoxmlParser::DocxParagraph)
       counter += table_count_table(element) if element.is_a?(OoxmlParser::Table)
     end
@@ -22,7 +23,7 @@ module TableCounter
     paragraph.nonempty_runs.each do |run|
       next if run.is_a?(OoxmlParser::DocxFormula)
       counter += table_count_in_graphic_data(run)
-      counter += table_count_in_shape(run.shape)
+      counter += table_count_in_element_list(run.shape)
     end
     counter
   end
@@ -42,7 +43,7 @@ module TableCounter
 
   def table_count_in_docx_shape(shape)
     counter = 0
-    counter += table_count_in_shape(shape)
+    counter += table_count_in_element_list(shape)
     return counter unless shape.respond_to?(:text_body) && shape.text_body
     shape.text_body.elements.each do |shape_element|
       counter += 1 if shape_element.is_a?(OoxmlParser::Table)
@@ -67,7 +68,7 @@ module TableCounter
 
   # @param shape [OoxmlParser::Shape] shape to count
   # @return [Integer] number of tables
-  def table_count_in_shape(shape)
+  def table_count_in_element_list(shape)
     return 0 unless shape
     counter = 0
     return counter unless shape.respond_to?(:elements)
